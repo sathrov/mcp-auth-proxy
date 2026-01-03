@@ -97,7 +97,19 @@ func setupProxy(ctx context.Context, logger *zap.Logger, tr transport.Bidirectio
 	if err := c.Start(ctx); err != nil {
 		return nil, nil, fmt.Errorf("failed to start MCP client: %w", err)
 	}
-	init, err := c.Initialize(ctx, mcp.InitializeRequest{})
+	initCtx, cancel := context.WithTimeout(ctx, MCPClientInitTimeout)
+	defer cancel()
+
+	initRequest := mcp.InitializeRequest{
+		Params: mcp.InitializeParams{
+			ProtocolVersion: mcp.LATEST_PROTOCOL_VERSION,
+			ClientInfo: mcp.Implementation{
+				Name:    "mcp-auth-proxy",
+				Version: "dev",
+			},
+		},
+	}
+	init, err := c.Initialize(initCtx, initRequest)
 	if err != nil {
 		c.Close()
 		return nil, nil, fmt.Errorf("failed to initialize MCP client: %w", err)
