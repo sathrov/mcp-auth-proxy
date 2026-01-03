@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.3](https://github.com/sigbit/mcp-auth-proxy/compare/v2.5.2...v2.5.3) (2026-01-03)
+
+
+### Bug Fixes
+
+* send MCP initialize metadata for stdio backends ([#106](https://github.com/sigbit/mcp-auth-proxy/issues/106)) ([16de9cd](https://github.com/sigbit/mcp-auth-proxy/commit/16de9cd66e429fb27b0d8dbaacea99cdc9fd2730))
+
 ## [2.5.2](https://github.com/sigbit/mcp-auth-proxy/compare/v2.5.1...v2.5.2) (2025-12-04)
 
 
