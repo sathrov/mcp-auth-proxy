@@ -148,6 +148,26 @@ func (a *IDPRouter) handleAuthorizationReturn(c *gin.Context) {
 	if len(ar.GetGrantedAudience()) == 0 {
 		ar.GrantAudience(a.externalURL)
 	}
+	// Ensure both with and without trailing slash are in audience
+	// claude.ai sends resource with trailing slash, so both must match
+	extWithSlash := strings.TrimRight(a.externalURL, "/") + "/"
+	extWithoutSlash := strings.TrimRight(a.externalURL, "/")
+	granted := ar.GetGrantedAudience()
+	hasSlash, hasNoSlash := false, false
+	for _, g := range granted {
+		if g == extWithSlash {
+			hasSlash = true
+		}
+		if g == extWithoutSlash {
+			hasNoSlash = true
+		}
+	}
+	if !hasSlash {
+		ar.GrantAudience(extWithSlash)
+	}
+	if !hasNoSlash {
+		ar.GrantAudience(extWithoutSlash)
+	}
 	jwtSession, err := NewJWTSessionWithKey(a.externalURL, "user", a.privKey)
 	if err != nil {
 		a.logger.With(utils.Err(err)...).Error("Failed to create JWT session", zap.Error(err))
