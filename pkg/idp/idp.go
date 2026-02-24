@@ -405,7 +405,7 @@ func NewJWTSessionWithKey(iss string, subject string, privateKey *rsa.PrivateKey
 		JWTClaims: &jwt.JWTClaims{
 			Issuer:    iss,
 			Subject:   subject,
-			Audience:  []string{},
+			Audience:  []string{iss},
 			ExpiresAt: time.Now().Add(time.Hour),
 			IssuedAt:  time.Now(),
 			NotBefore: time.Now(),
